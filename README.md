@@ -24,20 +24,23 @@ db.Put( []byte("hello"), []byte("value") )
 ## Performance
 
 ```
-Linux/amd64 - Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz
+Linux/amd64, Go 1.17-cb88c5b6be, Intel Core i7-8700
 
-Benchmark_Normal_100keys_8bytes-12       	     753	   1627542 ns/op
-Benchmark_AES128_100keys_8bytes-12       	     723	   1666636 ns/op
-Benchmark_AES256_100keys_8bytes-12       	     715	   1664757 ns/op
-Benchmark_Normal_10000keys_8bytes-12     	      52	  22408747 ns/op
-Benchmark_AES128_10000keys_8bytes-12     	      66	  17912655 ns/op
-Benchmark_AES256_10000keys_8bytes-12     	     405	   3045821 ns/op
-Benchmark_Normal_100keys_32bytes-12      	     760	   1656028 ns/op
-Benchmark_AES128_100keys_32bytes-12      	     630	   1746463 ns/op
-Benchmark_AES256_100keys_32bytes-12      	     679	   1748278 ns/op
-Benchmark_Normal_10000keys_32bytes-12    	      48	  23738455 ns/op
-Benchmark_AES128_10000keys_32bytes-12    	      56	  21215759 ns/op
-Benchmark_AES256_10000keys_32bytes-12    	      57	  20984932 ns/op
+Benchmark_Normal_100keys_8bytes-12       	     859	   1433694 ns/op
+Benchmark_AES128_100keys_8bytes-12       	     759	   1470218 ns/op
+Benchmark_AES256_100keys_8bytes-12       	     808	   1480387 ns/op
+
+Benchmark_Normal_10000keys_8bytes-12     	      55	  21508465 ns/op
+Benchmark_AES128_10000keys_8bytes-12     	      64	  17735344 ns/op
+Benchmark_AES256_10000keys_8bytes-12     	     418	   2834664 ns/op
+
+Benchmark_Normal_100keys_32bytes-12      	     837	   1463877 ns/op
+Benchmark_AES128_100keys_32bytes-12      	     795	   1515165 ns/op
+Benchmark_AES256_100keys_32bytes-12      	     789	   1506116 ns/op
+
+Benchmark_Normal_10000keys_32bytes-12    	      50	  23339237 ns/op
+Benchmark_AES128_10000keys_32bytes-12    	      56	  20262302 ns/op
+Benchmark_AES256_10000keys_32bytes-12    	      58	  20321537 ns/op
 ```
 
 ## License
