@@ -1,0 +1,13 @@
+github.com/fsnotify/fsnotify v1.4.10-0.20200417215612-7f4cf4dd2b52 h1:0NmERxogGTU8hgzOhRKNoKivtBZkDW29GeuJtK9e0sc=
+github.com/golang/snappy v0.0.4-0.20210502035320-33fc3d5d8d99 h1:vsBwDpPr442gOtutTvPdgJ0xhaUI/1uX53JosuHzIRE=
+github.com/golang/snappy v0.0.4-0.20210502035320-33fc3d5d8d99/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
+github.com/johnsonjh/jleveldb v0.0.0-20210512030325-c40cecf747db h1:eSNbCAS1XkbdyveEfbBpCDzcUlO1AegnKoWbcCf0tvc=
+github.com/johnsonjh/jleveldb v0.0.0-20210512030325-c40cecf747db/go.mod h1:gVr9nG0AnE3HgrukQm3MZgrhsmQru770wE8ieD3jvzo=
+github.com/nxadm/tail v1.4.9-0.20210306212145-92547340f0cc h1:St7LefoPAySVH8X8FkaZwL1SbYtTOJAuCxD4vcTQb/g=
+github.com/onsi/ginkgo v1.16.2 h1:HFB2fbVIlhIfCfOW81bZFbiC/RvnpXSdhbF2/DJr134=
+github.com/onsi/gomega v1.12.0 h1:p4oGGk2M2UJc0wWN4lHFvIB71lxsh0T/UiKCCgFADY8=
+golang.org/x/net v0.0.0-20210510120150-4163338589ed h1:p9UgmWI9wKpfYmgaV/IZKGdXc5qEK45tDwwwDyjS26I=
+golang.org/x/sys v0.0.0-20210511113859-b0526f3d8744 h1:yhBbb4IRs2HS9PPlAg6DMC6mUOKexJBNsLf4Z+6En1Q=
+golang.org/x/text v0.3.7-0.20210503195748-5c7c50ebbd4f h1:yQJrRE0hDxDFmZLlRaw+3vusO4fwNHgHIjUOMO7bHYI=
+gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 h1:uRGJdciOHaEIrze2W8Q3AKkepLTh2hOroT7a+7czfdQ=
+gopkg.in/yaml.v2 v2.4.0 h1:D8xgwECY7CYvx+Y2n4sBz93Jn9JRvxdiyyo8CTfuKaY=
