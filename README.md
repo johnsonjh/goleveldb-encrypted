@@ -9,7 +9,7 @@ JLevelDB Encrypted Storage provides a strongly encrypted storage (data at rest) 
 Installation
 ============
 
-1. `go install -a -v github.com/johnsonjh/jleveldb-encrypted`
+1. `go get -a -v github.com/johnsonjh/jleveldb-encrypted`
 
 Usage
 =====
