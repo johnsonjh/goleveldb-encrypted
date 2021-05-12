@@ -2,8 +2,8 @@
 
 [![GoReportCard](https://goreportcard.com/badge/github.com/johnsonjh/jleveldb-encrypted)](https://goreportcard.com/report/github.com/johnsonjh/jleveldb-encrypted)
 
-JLevelDB Encrypted Storage provides a strongly encrypted storage
-(data at rest) for [JLevelDB](https://github.com/johnsonjh/jleveldb).
+JLevelDB Encrypted Storage provides AES encryption support for
+[JLevelDB](https://github.com/johnsonjh/jleveldb).
 
 ## Installation
 
@@ -11,10 +11,9 @@ JLevelDB Encrypted Storage provides a strongly encrypted storage
 
 ## Usage
 
-The storage engine can be manually instantiated (see the `aesgcm`
-package for the raw storage interface), but for most use cases a
-wrapper equivalent to `OpenFile` is provided - replace calls to
-`OpenFile` with calls to `OpenAESEncryptedFile`.
+A wrapper equivalent to `OpenFile` is provided. 
+
+Replace calls to `OpenFile` with `OpenAESEncryptedFile`.
 ```
 db, err = OpenAESEncryptedFile( dir, key, nil )
 defer db.Close()
