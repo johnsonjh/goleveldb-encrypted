@@ -11,9 +11,10 @@ JLevelDB Encrypted Storage provides AES encryption support for
 
 ## Usage
 
-A wrapper equivalent to `OpenFile` is provided. 
+A wrapper equivalent to `OpenFile` is provided.
 
 Replace calls to `OpenFile` with `OpenAESEncryptedFile`.
+
 ```
 db, err = OpenAESEncryptedFile( dir, key, nil )
 defer db.Close()
@@ -57,8 +58,11 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 
 In addition, this entire repository may also be used under the 3-Clause BSD
-license of [GoLevelDB Project](https://github.com/syndtr/goleveldb/blob/master/LICENSE).
+license of
+[GoLevelDB Project](https://github.com/syndtr/goleveldb/blob/master/LICENSE).
 
 ## Original Authors
 
-Derived from [GoLevelDB Encrypted Storage](https://github.com/tenta-browser/goleveldb-encrypted) by [Tenta](https://tenta.com).
+Derived from
+[GoLevelDB Encrypted Storage](https://github.com/tenta-browser/goleveldb-encrypted)
+by [Tenta](https://tenta.com).
