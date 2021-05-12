@@ -15,8 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * For any questions, please contact developer@tenta.io
- *
  * aesgcm_storage_key_test.go: Key length verification for encrypted storage engine
  *
  */
