@@ -32,7 +32,6 @@ package aesgcm
 
 import (
 	"fmt"
-	"github.com/johnsonjh/jleveldb/leveldb/storage"
 	"io"
 	"io/ioutil"
 	"os"
@@ -40,6 +39,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/johnsonjh/jleveldb/leveldb/storage"
 )
 
 type fileLock interface {
@@ -98,7 +99,7 @@ func (fs *aesgcmStorage) setMeta(fd storage.FileDesc) error {
 			// Content not changed, do nothing.
 			return nil
 		}
-		if err := writeFileSynced(currentPath+".bak", b, 0644); err != nil {
+		if err := writeFileSynced(currentPath+".bak", b, 0o644); err != nil {
 			fs.Log(fmt.Sprintf("backup CURRENT: %v", err))
 			return err
 		}
@@ -106,7 +107,7 @@ func (fs *aesgcmStorage) setMeta(fd storage.FileDesc) error {
 		return err
 	}
 	path := fmt.Sprintf("%s.%d", filepath.Join(fs.path, "CURRENT"), fd.Num)
-	if err := writeFileSynced(path, []byte(content), 0644); err != nil {
+	if err := writeFileSynced(path, []byte(content), 0o644); err != nil {
 		fs.Log(fmt.Sprintf("create CURRENT.%d: %v", fd.Num, err))
 		return err
 	}

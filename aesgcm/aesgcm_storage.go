@@ -69,7 +69,6 @@ type aesgcmStorage struct {
 }
 
 func OpenEncryptedFile(path string, key []byte, readOnly bool) (storage.Storage, error) {
-
 	ace, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -85,7 +84,7 @@ func OpenEncryptedFile(path string, key []byte, readOnly bool) (storage.Storage,
 			return nil, fmt.Errorf("leveldb/storage: open %s: not a directory", path)
 		}
 	} else if os.IsNotExist(err) && !readOnly {
-		if err := os.MkdirAll(path, 0755); err != nil {
+		if err := os.MkdirAll(path, 0o755); err != nil {
 			return nil, err
 		}
 	} else {
@@ -114,7 +113,7 @@ func OpenEncryptedFile(path string, key []byte, readOnly bool) (storage.Storage,
 }
 
 func (fs *aesgcmStorage) Log(str string) {
-	//println(str)
+	// println(str)
 	// TODO: Pluggable logging
 }
 
@@ -172,7 +171,7 @@ func (fs *aesgcmStorage) Create(fd storage.FileDesc) (storage.Writer, error) {
 	if fs.open < 0 {
 		return nil, storage.ErrClosed
 	}
-	of, err := os.OpenFile(filepath.Join(fs.path, fsGenName(fd)), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	of, err := os.OpenFile(filepath.Join(fs.path, fsGenName(fd)), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0o644)
 	if err != nil {
 		return nil, err
 	}

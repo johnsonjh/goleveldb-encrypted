@@ -27,12 +27,13 @@ import (
 	"crypto/hmac"
 	"crypto/sha512"
 	"fmt"
-	"github.com/johnsonjh/jleveldb/leveldb/util"
 	"io/ioutil"
 	"math/rand"
 	"os"
 	"sort"
 	"testing"
+
+	"github.com/johnsonjh/jleveldb/leveldb/util"
 )
 
 var testKey = []byte{0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf}
@@ -58,7 +59,7 @@ func TestOpenAESEncryptedFile(t *testing.T) {
 	d := tempDir(t)
 
 	db, e := OpenAESEncryptedFile(d, testKey, nil)
-	//db, e := leveldb.OpenFile(d, nil)
+	// db, e := leveldb.OpenFile(d, nil)
 	if e != nil {
 		t.Logf("%s", e.Error())
 		t.Fail()

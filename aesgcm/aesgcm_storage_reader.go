@@ -25,6 +25,7 @@ package aesgcm
 
 import (
 	"bytes"
+
 	"github.com/johnsonjh/jleveldb/leveldb/storage"
 )
 

@@ -32,13 +32,14 @@ package aesgcm
 
 import (
 	"fmt"
-	"github.com/johnsonjh/jleveldb/leveldb/storage"
 	"io/ioutil"
 	"math/rand"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/johnsonjh/jleveldb/leveldb/storage"
 )
 
 var testKey = []byte{0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf}
@@ -265,7 +266,7 @@ func TestFileStorage_Meta(t *testing.T) {
 			if cur.corrupt {
 				content = content[:len(content)-1-rand.Intn(3)]
 			}
-			if err := ioutil.WriteFile(filepath.Join(temp, curName), []byte(content), 0644); err != nil {
+			if err := ioutil.WriteFile(filepath.Join(temp, curName), []byte(content), 0o644); err != nil {
 				t.Fatal(err)
 			}
 			if cur.manifest {

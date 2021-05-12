@@ -27,8 +27,9 @@ import (
 	"bytes"
 	"crypto/rand"
 	"fmt"
-	"github.com/johnsonjh/jleveldb/leveldb/storage"
 	"os"
+
+	"github.com/johnsonjh/jleveldb/leveldb/storage"
 )
 
 type aesgcmWriter struct {

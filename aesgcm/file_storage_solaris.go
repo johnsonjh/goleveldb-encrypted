@@ -4,6 +4,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+//go:build solaris
 // +build solaris
 
 package aesgcm
@@ -33,7 +34,7 @@ func newFileLock(path string, readOnly bool) (fl fileLock, err error) {
 	}
 	f, err := os.OpenFile(path, flag, 0)
 	if os.IsNotExist(err) {
-		f, err = os.OpenFile(path, flag|os.O_CREATE, 0644)
+		f, err = os.OpenFile(path, flag|os.O_CREATE, 0o644)
 	}
 	if err != nil {
 		return
