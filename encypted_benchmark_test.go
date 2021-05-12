@@ -20,7 +20,7 @@
  * encrypted_benchmark_test.go: Encrypted Storage Benchmark
  */
 
-package jleveldb_encrypted
+package jleveldbencrypted
 
 import (
 	"io/ioutil"

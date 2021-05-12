@@ -20,7 +20,7 @@
  * encrypted_basic_test.go: Basic test of the encrypted storage using the wrapper function
  */
 
-package jleveldb_encrypted
+package jleveldbencrypted
 
 import (
 	"bytes"

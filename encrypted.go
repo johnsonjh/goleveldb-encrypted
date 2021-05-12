@@ -20,7 +20,7 @@
  * encrypted.go: Encrypted Storage Wrapper
  */
 
-package jleveldb_encrypted
+package jleveldbencrypted
 
 import (
 	"io"
