@@ -44,7 +44,7 @@ func initStrings(num, len int) {
 
 	rand.Seed(int64(num + len))
 
-	for i := 0; i < num; i += 1 {
+	for i := 0; i < num; i++ {
 		k := make([]byte, len)
 		rand.Read(k)
 		keys[i] = k
@@ -54,7 +54,7 @@ func initStrings(num, len int) {
 func rangeEnd(len int) []byte {
 	r := make([]byte, len+1)
 
-	for i := 0; i <= len; i += 1 {
+	for i := 0; i <= len; i++ {
 		r[i] = 0xff
 	}
 
@@ -69,7 +69,7 @@ var (
 )
 
 func loadBench(db *leveldb.DB) {
-	for i := 0; i < len(keys); i += 1 {
+	for i := 0; i < len(keys); i++ {
 		db.Put(keys[i], []byte{'a'}, nil)
 	}
 	db.CompactRange(util.Range{Start: nil, Limit: nil})

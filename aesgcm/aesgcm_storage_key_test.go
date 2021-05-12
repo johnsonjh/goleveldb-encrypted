@@ -30,7 +30,7 @@ import (
 )
 
 func TestOpenEncryptedFile_Keys(t *testing.T) {
-	for i := 0; i < 65; i += 1 {
+	for i := 0; i < 65; i++ {
 		temp := tempDir(t)
 
 		key := make([]byte, i)

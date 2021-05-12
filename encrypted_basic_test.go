@@ -114,7 +114,7 @@ func TestOpenAESEncryptedFile_Fuzz(t *testing.T) {
 
 	keys := make([]string, 1000)
 
-	for i := 0; i < 1000; i += 1 {
+	for i := 0; i < 1000; i++ {
 		k := make([]byte, 8)
 		rand.Read(k)
 		s := fmt.Sprintf("%016X", k)
@@ -168,12 +168,12 @@ func TestOpenAESEncryptedFile_Fuzz(t *testing.T) {
 			t.Logf("Invalid data: expected %016X, actual %016X", v, iter.Value())
 			t.Fail()
 		}
-		x += 1
+		x++
 	}
 
 	db2.Put([]byte("hello"), []byte("world"), nil)
 
-	for i := 0; i < 1000; i += 1 {
+	for i := 0; i < 1000; i++ {
 		db2.Delete([]byte(keys[i]), nil)
 	}
 

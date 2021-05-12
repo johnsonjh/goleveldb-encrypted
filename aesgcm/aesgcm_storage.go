@@ -152,7 +152,7 @@ func (fs *aesgcmStorage) Open(fd storage.FileDesc) (storage.Reader, error) {
 	if err != nil {
 		return nil, err
 	}
-	fs.open += 1
+	fs.open++
 	return newReader(plain, fd, fs), nil
 }
 
