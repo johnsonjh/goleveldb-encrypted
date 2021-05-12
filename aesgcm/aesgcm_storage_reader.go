@@ -25,7 +25,7 @@ package aesgcm
 
 import (
 	"bytes"
-	"github.com/syndtr/goleveldb/leveldb/storage"
+	"github.com/johnsonjh/jleveldb/leveldb/storage"
 )
 
 type aesgcmReader struct {

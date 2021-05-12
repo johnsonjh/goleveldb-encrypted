@@ -20,14 +20,14 @@
  * encrypted_basic_test.go: Basic test of the encrypted storage using the wrapper function
  */
 
-package goleveldb_encrypted
+package jleveldb_encrypted
 
 import (
 	"bytes"
 	"crypto/hmac"
 	"crypto/sha512"
 	"fmt"
-	"github.com/syndtr/goleveldb/leveldb/util"
+	"github.com/johnsonjh/jleveldb/leveldb/util"
 	"io/ioutil"
 	"math/rand"
 	"os"

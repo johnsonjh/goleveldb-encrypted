@@ -20,14 +20,14 @@
  * encrypted.go: Encrypted Storage Wrapper
  */
 
-package goleveldb_encrypted
+package jleveldb_encrypted
 
 import (
 	"io"
 
-	"github.com/gabriel/goleveldb-encrypted/aesgcm"
-	"github.com/syndtr/goleveldb/leveldb"
-	"github.com/syndtr/goleveldb/leveldb/opt"
+	"github.com/johnsonjh/jleveldb-encrypted/aesgcm"
+	"github.com/johnsonjh/jleveldb/leveldb"
+	"github.com/johnsonjh/jleveldb/leveldb/opt"
 )
 
 type EncryptedDB struct {

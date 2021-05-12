@@ -20,11 +20,11 @@
  * encrypted_benchmark_test.go: Encrypted Storage Benchmark
  */
 
-package goleveldb_encrypted
+package jleveldb_encrypted
 
 import (
-	"github.com/syndtr/goleveldb/leveldb"
-	"github.com/syndtr/goleveldb/leveldb/util"
+	"github.com/johnsonjh/jleveldb/leveldb"
+	"github.com/johnsonjh/jleveldb/leveldb/util"
 	"io/ioutil"
 	"math/rand"
 	"os"

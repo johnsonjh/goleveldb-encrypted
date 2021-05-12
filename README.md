@@ -1,24 +1,24 @@
-GoLevelDB Encrypted Storage
+JLevelDB Encrypted Storage
 ==============
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/tenta-browser/goleveldb-encrypted)](https://goreportcard.com/report/github.com/tenta-browser/goleveldb-encrypted)
-[![GoDoc](https://godoc.org/github.com/tenta-browser/goleveldb-encrypted?status.svg)](https://godoc.org/github.com/tenta-browser/goleveldb-encrypted)
+[![GoReportCard](https://goreportcard.com/badge/github.com/johnsonjh/jleveldb-encrypted)](https://goreportcard.com/report/github.com/johnsonjh/jleveldb-encrypted)
 
-GoLevelDB Encrypted Storage provides a strongly encrypted storage (data at rest) for [GoLevelDB](https://github.com/syndtr/goleveldb).
-
-Contact: developer@tenta.io
+JLevelDB Encrypted Storage provides a strongly encrypted storage (data at rest) for
+[JLevelDB](https://github.com/johnsonjh/jleveldb).
 
 Installation
 ============
 
-1. `go get github.com/tenta-browser/goleveldb-encrypted`
+1. `go install -a -v github.com/johnsonjh/jleveldb-encrypted`
 
 Usage
 =====
 
-Since the storage engine can be manually instantiated (see the aesgcm package for the raw storage interface), but for most
-use cases a wrapped is provided equivalent to the `OpenFile` wrapper in GoLevelDB. So simply replace a call to `OpenFile`
-with a call to `OpenAESEncryptedFile`, and then use the database just like you normally would
+Since the storage engine can be manually instantiated (see the aesgcm package for
+the raw storage interface), but for most use cases a wrapped is provided equivalent
+to the `OpenFile` wrapper in JLevelDB. So simply replace a call to `OpenFile` with
+a call to `OpenAESEncryptedFile`, and then use the database just like you normally
+would
 
 ```
 db, err = OpenAESEncryptedFile(dir, key, nil)
@@ -30,29 +30,34 @@ db.Put([]byte("hello"), []byte("value"))
 Security
 ========
 
-This encryption engine is designed to be secure, but it's still under active development and we do not use it in production projects
-yet. We'd be thrilled for everyone to test the heck out of it and endeavour to find problems with the implementation or security.
+This encryption engine is designed to be secure, but it's still under active
+development and we do not use it in production projects yet. We'd be thrilled
+for everyone to test the heck out of it and endeavour to find problems with
+the implementation or security.
 
-The entire contents of all data files are encrypted in AEAD mode using AES128 or AES256. Encryption mode is selected automatically based
-on the key length, for AES128, use a 16 byte key and for AES256 a 32 byte key. The only files unencrypted are the `LOCK` file, which
-exists only as a filesystem lock to prevent database corruption and the CURRENT file, which simply contains a pointer to the currently
-active file (but no data).
+The entire contents of all data files are encrypted in AEAD mode using AES128
+or AES256. Encryption mode is selected automatically based on the key length,
+for AES128, use a 16 byte key and for AES256 a 32 byte key. The only files
+unencrypted are the `LOCK` file, which exists only as a filesystem lock to
+prevent database corruption and the CURRENT file, which simply contains a pointer
+to the currently active file (but no data).
 
-File names are _not_ encrypted, however, they are simply numerically increasing sequence numbers, and we currently do not believe that
-any meaningful information can be extracted from knowing the segment file numbers, however we will continue to evaluate this choice as
-we develop this library.
+File names are _not_ encrypted, however, they are simply numerically increasing
+sequence numbers, and we currently do not believe that any meaningful information
+can be extracted from knowing the segment file numbers, however we will continue
+to evaluate this choice as we develop this library.
 
 An attacker will be able to estimate the total quantity of data (key length + value length) stored in the database. We do not believe that it will be practical to
 determine the number of keys and values in the database, and we believe that the contents of the keys and values are strongly encrypted.
 
 The current construction of the nonce has a very small chance of collision, if the database engine writes on the order of 2^32 file
-segments. Given LevelDB's file write behavior this seems improbably even on extremely large and busy DB's, but we'll do further analysis
+segments. Given JLevelDB's file write behavior this seems improbably even on extremely large and busy DB's, but we'll do further analysis
 of the nonce implementation before declaring this code ready for production.
 
 Performance
 ===========
 
-GoLevelDB Encrypted Storage is still under active development and we do not use it in production yet. On small databases it runs somewhat
+JLevelDB Encrypted Storage is still under active development and we do not use it in production yet. On small databases it runs somewhat
 slower than the default file storage engine, as lots of time is spent encrypting housekeeping data compared to the default file storage.
 On larger databases, the speed difference is small.
 
@@ -80,7 +85,7 @@ Benchmark_AES256_10000keys_32bytes-4   	     100	 443302136 ns/op
 License
 =======
 
-This project contains some code from the GoLevelDB project, as this code is currently
+This project contains code from the GoLevelDB project, as this code is currently
 package private.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -97,8 +102,6 @@ limitations under the License.
 
 In addition, this entire repository may also be used under the BSD 3-clause
 license available of the [GoLevelDB Project](https://github.com/syndtr/goleveldb/blob/master/LICENSE).
-
-For any questions, please contact developer@tenta.io
 
 Contributing
 ============

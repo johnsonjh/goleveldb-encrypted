@@ -27,7 +27,7 @@ import (
 	"bytes"
 	"crypto/rand"
 	"fmt"
-	"github.com/syndtr/goleveldb/leveldb/storage"
+	"github.com/johnsonjh/jleveldb/leveldb/storage"
 	"os"
 )
 

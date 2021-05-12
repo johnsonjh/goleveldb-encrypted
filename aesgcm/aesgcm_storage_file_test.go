@@ -15,12 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * For any questions, please contact developer@tenta.io
- *
  * aesgcm_storage_file_test.go: Version of file_storage_test.go for encrypted storage
  *
- * This file contains some code originally from
- * https://github.com/syndtr/goleveldb/blob/master/leveldb/storage
+ * This file contains some code originally from GoLevelDB
  * licensed under a BSD license which bears the following copyright
  *
  * "Copyright (c) 2012, Suryandaru Triandana <syndtr@gmail.com>
@@ -35,7 +32,7 @@ package aesgcm
 
 import (
 	"fmt"
-	"github.com/syndtr/goleveldb/leveldb/storage"
+	"github.com/johnsonjh/jleveldb/leveldb/storage"
 	"io/ioutil"
 	"math/rand"
 	"os"

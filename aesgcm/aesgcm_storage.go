@@ -15,12 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * For any questions, please contact developer@tenta.io
- *
  * aesgcm_storage.go: Main implementation of encrypted storage
  *
- * This file contains some code originally from
- * https://github.com/syndtr/goleveldb/blob/master/leveldb/storage
+ * This file contains some code originally from GoLevelDB
  * licensed under a BSD license which bears the following copyright
  *
  * "Copyright (c) 2012, Suryandaru Triandana <syndtr@gmail.com>
@@ -45,13 +42,12 @@ import (
 	"runtime"
 	"sync"
 
-	"github.com/syndtr/goleveldb/leveldb/storage"
+	"github.com/johnsonjh/jleveldb/leveldb/storage"
 )
 
 const additionalDataLen = 1 + binary.MaxVarintLen64 // Length of an int64 plus one byte for type
 
 var (
-	// Kepp the log name from the goleveldb storage package so that logs remain the same
 	errFileOpen         = errors.New("leveldb/storage: file still open")
 	errReadOnly         = errors.New("leveldb/storage: storage is read only")
 	errCorruptedCurrent = errors.New("leveldb/storage: corrupted or incomplete CURRENT file")

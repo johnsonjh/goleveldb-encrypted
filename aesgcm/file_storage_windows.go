@@ -1,7 +1,3 @@
-// Originally from the version in goleveldb at
-// https://github.com/syndtr/goleveldb/blob/master/leveldb/storage/file_storage_unix.go
-// (note, the LICENSE file mentioned below refers to https://github.com/syndtr/goleveldb/blob/master/LICENSE)
-
 // Copyright (c) 2013, Suryandaru Triandana <syndtr@gmail.com>
 // All rights reserved.
 //
