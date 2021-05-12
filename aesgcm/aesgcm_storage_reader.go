@@ -52,7 +52,7 @@ func (r aesgcmReader) Close() error {
 		return storage.ErrClosed
 	}
 	r.closed = true
-	r.fs.open -= 1
+	r.fs.open--
 	// TODO: (maybe) push the bytes back into a pool?
 	return nil
 }

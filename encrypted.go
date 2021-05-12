@@ -30,11 +30,13 @@ import (
 	"github.com/johnsonjh/jleveldb/leveldb/opt"
 )
 
+// EncryptedDB ...
 type EncryptedDB struct {
 	*leveldb.DB
 	scloser io.Closer
 }
 
+// Close ...
 func (e *EncryptedDB) Close() {
 	e.DB.Close()
 	e.scloser.Close()

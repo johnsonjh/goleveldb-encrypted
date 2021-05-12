@@ -68,6 +68,7 @@ type aesgcmStorage struct {
 	cyp cipher.AEAD
 }
 
+// OpenEncryptedFile ...
 func OpenEncryptedFile(path string, key []byte, readOnly bool) (storage.Storage, error) {
 	ace, err := aes.NewCipher(key)
 	if err != nil {
