@@ -95,7 +95,7 @@ func (fs *aesgcmStorage) setMeta(fd storage.FileDesc) error {
 		return err
 	}
 
-	content := fsGenName(fd) + "\n"
+	content := FSGenName(fd) + "\n"
 	currentPath := filepath.Join(fs.path, "CURRENT")
 	if _, err := os.Stat(currentPath); err == nil {
 		b, err := ioutil.ReadFile(currentPath)
@@ -195,13 +195,13 @@ func (fs *aesgcmStorage) GetMeta() (storage.FileDesc, error) {
 		var fd storage.FileDesc
 		if len(b) < 1 ||
 			b[len(b)-1] != '\n' ||
-			!fsParseNamePtr(string(b[:len(b)-1]), &fd) {
+			!FSParseNamePtr(string(b[:len(b)-1]), &fd) {
 			fs.Log(fmt.Sprintf("%s: corrupted content: %q", name, b))
 			err := &storage.ErrCorrupted{Err: errCorruptedCurrent}
 			return nil, err
 		}
 		if _, err := os.Stat(
-			filepath.Join(fs.path, fsGenName(fd))); err != nil {
+			filepath.Join(fs.path, FSGenName(fd))); err != nil {
 			if os.IsNotExist(err) {
 				fs.Log(fmt.Sprintf("%s: missing target file: %s", name, fd))
 				err = os.ErrNotExist
@@ -324,7 +324,7 @@ func (fs *aesgcmStorage) List(ft storage.FileType) (fds []storage.FileDesc,
 	}
 	if err == nil {
 		for _, name := range names {
-			if fd, ok := fsParseName(name); ok && fd.Type&ft != 0 {
+			if fd, ok := FSParseName(name); ok && fd.Type&ft != 0 {
 				fds = append(fds, fd)
 			}
 		}
@@ -332,7 +332,8 @@ func (fs *aesgcmStorage) List(ft storage.FileType) (fds []storage.FileDesc,
 	return
 }
 
-func fsGenName(fd storage.FileDesc) string {
+// FSGenName ...
+func FSGenName(fd storage.FileDesc) string {
 	switch fd.Type {
 	case storage.TypeManifest:
 		return fmt.Sprintf("MANIFEST-%06d", fd.Num)
@@ -347,7 +348,8 @@ func fsGenName(fd storage.FileDesc) string {
 	}
 }
 
-func fsParseName(name string) (fd storage.FileDesc, ok bool) {
+// FSParseName ...
+func FSParseName(name string) (fd storage.FileDesc, ok bool) {
 	var tail string
 	_, err := fmt.Sscanf(name, "%d.%s", &fd.Num, &tail)
 	if err == nil {
@@ -371,8 +373,9 @@ func fsParseName(name string) (fd storage.FileDesc, ok bool) {
 	return
 }
 
-func fsParseNamePtr(name string, fd *storage.FileDesc) bool {
-	_fd, ok := fsParseName(name)
+// FSParseNamePtr ...
+func FSParseNamePtr(name string, fd *storage.FileDesc) bool {
+	_fd, ok := FSParseName(name)
 	if fd != nil {
 		*fd = _fd
 	}
@@ -408,7 +411,7 @@ func (fs *aesgcmStorage) Remove(fd storage.FileDesc) error {
 	if fs.open < 0 {
 		return storage.ErrClosed
 	}
-	err := os.Remove(filepath.Join(fs.path, fsGenName(fd)))
+	err := os.Remove(filepath.Join(fs.path, FSGenName(fd)))
 	if err != nil {
 		fs.Log(fmt.Sprintf("remove %s: %v", fd, err))
 	}
@@ -432,6 +435,6 @@ func (fs *aesgcmStorage) Rename(oldfd, newfd storage.FileDesc) error {
 		return storage.ErrClosed
 	}
 	return rename(
-		filepath.Join(fs.path, fsGenName(oldfd)),
-		filepath.Join(fs.path, fsGenName(newfd)))
+		filepath.Join(fs.path, FSGenName(oldfd)),
+		filepath.Join(fs.path, FSGenName(newfd)))
 }

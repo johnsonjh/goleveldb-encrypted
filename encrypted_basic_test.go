@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package jleveldbencrypted
+package jleveldbencrypted_test
 
 import (
 	"bytes"
@@ -31,6 +31,7 @@ import (
 	"sort"
 	"testing"
 
+	edb "github.com/johnsonjh/jleveldb-encrypted"
 	"github.com/johnsonjh/jleveldb/leveldb/util"
 )
 
@@ -59,7 +60,7 @@ var basicTestData = []struct {
 func TestOpenAESEncryptedFile(t *testing.T) {
 	d := tempDir(t)
 
-	db, e := OpenAESEncryptedFile(d, testKey, nil)
+	db, e := edb.OpenAESEncryptedFile(d, testKey, nil)
 	if e != nil {
 		t.Logf("%s", e.Error())
 		t.Fail()
@@ -75,7 +76,7 @@ func TestOpenAESEncryptedFile(t *testing.T) {
 
 	db.Close()
 
-	db2, e := OpenAESEncryptedFile(d, testKey, nil)
+	db2, e := edb.OpenAESEncryptedFile(d, testKey, nil)
 
 	if e != nil {
 		println(e.Error())
@@ -104,7 +105,7 @@ func TestOpenAESEncryptedFile(t *testing.T) {
 func TestOpenAESEncryptedFile_Fuzz(t *testing.T) {
 	d := tempDir(t)
 
-	db, e := OpenAESEncryptedFile(d, testKey, nil)
+	db, e := edb.OpenAESEncryptedFile(d, testKey, nil)
 
 	if e != nil {
 		t.Logf("Could not create DB: %s", e.Error())
@@ -130,7 +131,7 @@ func TestOpenAESEncryptedFile_Fuzz(t *testing.T) {
 
 	sort.Strings(keys)
 
-	db2, e := OpenAESEncryptedFile(d, testKey, nil)
+	db2, e := edb.OpenAESEncryptedFile(d, testKey, nil)
 
 	if e != nil {
 		t.Logf("Could not reopen DB: %s", e.Error())
@@ -184,7 +185,7 @@ func TestOpenAESEncryptedFile_Fuzz(t *testing.T) {
 
 	db2.Close()
 
-	db3, e := OpenAESEncryptedFile(d, testKey, nil)
+	db3, e := edb.OpenAESEncryptedFile(d, testKey, nil)
 
 	for _, k := range keys {
 		h, e := db3.Has([]byte(k), nil)

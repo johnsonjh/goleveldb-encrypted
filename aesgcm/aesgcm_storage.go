@@ -140,7 +140,7 @@ func (fs *aesgcmStorage) Open(fd storage.FileDesc) (storage.Reader, error) {
 		return nil, storage.ErrClosed
 	}
 	of, err := os.OpenFile(
-		filepath.Join(fs.path, fsGenName(fd)), os.O_RDONLY, 0)
+		filepath.Join(fs.path, FSGenName(fd)), os.O_RDONLY, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -179,7 +179,7 @@ func (fs *aesgcmStorage) Create(fd storage.FileDesc) (storage.Writer,
 		return nil, storage.ErrClosed
 	}
 	of, err := os.OpenFile(
-		filepath.Join(fs.path, fsGenName(fd)),
+		filepath.Join(fs.path, FSGenName(fd)),
 		os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0o644)
 	if err != nil {
 		return nil, err

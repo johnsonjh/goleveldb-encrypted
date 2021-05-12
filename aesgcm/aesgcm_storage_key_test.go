@@ -18,21 +18,25 @@
  * limitations under the License.
  */
 
-package aesgcm
+package aesgcm_test
 
 import (
 	"math/rand"
 	"os"
 	"testing"
+
+	"github.com/johnsonjh/jleveldb-encrypted/aesgcm"
+	u "github.com/johnsonjh/leaktestfe"
 )
 
 func TestOpenEncryptedFile_Keys(t *testing.T) {
+	defer u.Leakplug(t)
 	for i := 0; i < 65; i++ {
 		temp := tempDir(t)
 
 		key := make([]byte, i)
 		rand.Read(key)
-		db, err := OpenEncryptedFile(temp, key, false)
+		db, err := aesgcm.OpenEncryptedFile(temp, key, false)
 
 		if i == 16 || i == 24 || i == 32 {
 			if err != nil || db == nil {

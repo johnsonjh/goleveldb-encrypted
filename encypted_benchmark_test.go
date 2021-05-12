@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package jleveldbencrypted
+package jleveldbencrypted_test
 
 import (
 	"io/ioutil"
@@ -26,6 +26,7 @@ import (
 	"os"
 	"testing"
 
+	ejdb "github.com/johnsonjh/jleveldb-encrypted"
 	"github.com/johnsonjh/jleveldb/leveldb"
 	"github.com/johnsonjh/jleveldb/leveldb/util"
 )
@@ -99,8 +100,8 @@ func doBenchMark(b *testing.B, tp bType, num, len int, key []byte) {
 			loadBench(db)
 			db.Close()
 		} else if tp == encryptedStorage {
-			var edb *EncryptedDB
-			edb, err = OpenAESEncryptedFile(dir, key, nil)
+			var edb *ejdb.EncryptedDB
+			edb, err = ejdb.OpenAESEncryptedFile(dir, key, nil)
 			if err != nil {
 				b.Fatal(err.Error())
 			}

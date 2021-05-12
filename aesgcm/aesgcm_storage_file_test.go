@@ -28,7 +28,7 @@
  * found in the LICENSE file.
  */
 
-package aesgcm
+package aesgcm_test
 
 import (
 	"fmt"
@@ -39,7 +39,10 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/johnsonjh/jleveldb-encrypted/aesgcm"
+	jle "github.com/johnsonjh/jleveldb/leveldb/errors"
 	"github.com/johnsonjh/jleveldb/leveldb/storage"
+	u "github.com/johnsonjh/leaktestfe"
 )
 
 var testKey = []byte{
@@ -90,6 +93,7 @@ var invalidCases = []string{
 }
 
 func tempDir(t *testing.T) string {
+	defer u.Leakplug(t)
 	dir, err := ioutil.TempDir("", "aesgcm-storage-")
 	if err != nil {
 		t.Fatal(t)
@@ -99,8 +103,9 @@ func tempDir(t *testing.T) string {
 }
 
 func TestFileStorage_CreateFileName(t *testing.T) {
+	defer u.Leakplug(t)
 	for _, c := range cases {
-		if name := fsGenName(
+		if name := aesgcm.FSGenName(
 			storage.FileDesc{c.ftype, c.num}); name != c.name {
 			t.Errorf(
 				"invalid filename got '%s', want '%s'", name, c.name)
@@ -109,8 +114,9 @@ func TestFileStorage_CreateFileName(t *testing.T) {
 }
 
 func TestFileStorage_MetaSetGet(t *testing.T) {
+	defer u.Leakplug(t)
 	temp := tempDir(t)
-	fs, err := OpenEncryptedFile(temp, testKey, false)
+	fs, err := aesgcm.OpenEncryptedFile(temp, testKey, false)
 	if err != nil {
 		t.Fatal("OpenFile: got error: ", err)
 	}
@@ -143,6 +149,7 @@ func TestFileStorage_MetaSetGet(t *testing.T) {
 }
 
 func TestFileStorage_Meta(t *testing.T) {
+	defer u.Leakplug(t)
 	type current struct {
 		num      int64
 		backup   bool
@@ -306,7 +313,7 @@ func TestFileStorage_Meta(t *testing.T) {
 	for i, tc := range cases {
 		t.Logf("Test-%d", i)
 		temp := tempDir(t)
-		fs, err := OpenEncryptedFile(temp, testKey, false)
+		fs, err := aesgcm.OpenEncryptedFile(temp, testKey, false)
 		if err != nil {
 			t.Fatal("OpenFile: got error: ", err)
 		}
@@ -321,7 +328,7 @@ func TestFileStorage_Meta(t *testing.T) {
 				curName = fmt.Sprintf("CURRENT.%d", cur.num)
 			}
 			fd := storage.FileDesc{Type: storage.TypeManifest, Num: cur.num}
-			content := fmt.Sprintf("%s\n", fsGenName(fd))
+			content := fmt.Sprintf("%s\n", aesgcm.FSGenName(fd))
 			if cur.corrupt {
 				content = content[:len(content)-1-rand.Intn(3)]
 			}
@@ -347,7 +354,7 @@ func TestFileStorage_Meta(t *testing.T) {
 					"expect ErrNotExist, got: %v", err)
 			}
 		} else if tc.corrupt {
-			if !isCorrupted(err) {
+			if !jle.IsCorrupted(err) {
 				t.Fatalf(
 					"expect ErrCorrupted, got: %v", err)
 			}
@@ -384,9 +391,10 @@ func TestFileStorage_Meta(t *testing.T) {
 }
 
 func TestFileStorage_ParseFileName(t *testing.T) {
+	defer u.Leakplug(t)
 	for _, c := range cases {
 		for _, name := range append([]string{c.name}, c.oldName...) {
-			fd, ok := fsParseName(name)
+			fd, ok := aesgcm.FSParseName(name)
 			if !ok {
 				t.Errorf(
 					"cannot parse filename '%s'", name)
@@ -407,8 +415,9 @@ func TestFileStorage_ParseFileName(t *testing.T) {
 }
 
 func TestFileStorage_InvalidFileName(t *testing.T) {
+	defer u.Leakplug(t)
 	for _, name := range invalidCases {
-		if fsParseNamePtr(name, nil) {
+		if aesgcm.FSParseNamePtr(name, nil) {
 			t.Errorf(
 				"filename '%s' should be invalid", name)
 		}
@@ -416,16 +425,17 @@ func TestFileStorage_InvalidFileName(t *testing.T) {
 }
 
 func TestFileStorage_Locking(t *testing.T) {
+	defer u.Leakplug(t)
 	temp := tempDir(t)
 	defer os.RemoveAll(temp)
 
-	p1, err := OpenEncryptedFile(temp, testKey, false)
+	p1, err := aesgcm.OpenEncryptedFile(temp, testKey, false)
 	if err != nil {
 		t.Fatal(
 			"OpenFile(1): got error: ", err)
 	}
 
-	p2, err := OpenEncryptedFile(temp, testKey, false)
+	p2, err := aesgcm.OpenEncryptedFile(temp, testKey, false)
 	if err != nil {
 		t.Logf(
 			"OpenFile(2): got error: %s (expected)", err)
@@ -438,7 +448,7 @@ func TestFileStorage_Locking(t *testing.T) {
 
 	p1.Close()
 
-	p3, err := OpenEncryptedFile(temp, testKey, false)
+	p3, err := aesgcm.OpenEncryptedFile(temp, testKey, false)
 	if err != nil {
 		t.Fatal(
 			"OpenFile(3): got error: ", err)
@@ -467,16 +477,17 @@ func TestFileStorage_Locking(t *testing.T) {
 }
 
 func TestFileStorage_ReadOnlyLocking(t *testing.T) {
+	defer u.Leakplug(t)
 	temp := tempDir(t)
 	defer os.RemoveAll(temp)
 
-	p1, err := OpenEncryptedFile(temp, testKey, false)
+	p1, err := aesgcm.OpenEncryptedFile(temp, testKey, false)
 	if err != nil {
 		t.Fatal(
 			"OpenFile(1): got error: ", err)
 	}
 
-	_, err = OpenEncryptedFile(temp, testKey, true)
+	_, err = aesgcm.OpenEncryptedFile(temp, testKey, true)
 	if err != nil {
 		t.Logf(
 			"OpenFile(2): got error: %s (expected)", err)
@@ -487,19 +498,19 @@ func TestFileStorage_ReadOnlyLocking(t *testing.T) {
 
 	p1.Close()
 
-	p3, err := OpenEncryptedFile(temp, testKey, true)
+	p3, err := aesgcm.OpenEncryptedFile(temp, testKey, true)
 	if err != nil {
 		t.Fatal(
 			"OpenFile(3): got error: ", err)
 	}
 
-	p4, err := OpenEncryptedFile(temp, testKey, true)
+	p4, err := aesgcm.OpenEncryptedFile(temp, testKey, true)
 	if err != nil {
 		t.Fatal(
 			"OpenFile(4): got error: ", err)
 	}
 
-	_, err = OpenEncryptedFile(temp, testKey, false)
+	_, err = aesgcm.OpenEncryptedFile(temp, testKey, false)
 	if err != nil {
 		t.Logf(
 			"OpenFile(5): got error: %s (expected)", err)
