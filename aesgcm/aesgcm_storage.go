@@ -1,7 +1,8 @@
-/**
- * GoLevelDB Encrypted Storage
+/*
+ * JLevelDB Encrypted Storage
  *
- *    Copyright 2019 Tenta, LLC
+ *    Copyright (C) 2021 Jeffrey H. Johnson <trnsz@pobox.com>
+ *    Copyright (C) 2019 Tenta, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,20 +13,19 @@
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * aesgcm_storage.go: Main implementation of encrypted storage
+ * This file contains some code originally from GoLevelDB licensed under
+ * BSD license which bears the following copyright
  *
- * This file contains some code originally from GoLevelDB
- * licensed under a BSD license which bears the following copyright
+ * Copyright (c) 2012, Suryandaru Triandana <syndtr@gmail.com>
  *
- * "Copyright (c) 2012, Suryandaru Triandana <syndtr@gmail.com>
- * All rights reservefs."
+ * All rights reserved.
  *
- * "Use of this source code is governed by a BSD-style license that can be
- * found in the LICENSE file."
- *
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file.
  */
 
 package aesgcm
@@ -45,13 +45,17 @@ import (
 	"github.com/johnsonjh/jleveldb/leveldb/storage"
 )
 
-const additionalDataLen = 1 + binary.MaxVarintLen64 // Length of an int64 plus one byte for type
+const additionalDataLen = 1 + binary.MaxVarintLen64
 
 var (
-	errFileOpen         = errors.New("leveldb/storage: file still open")
-	errReadOnly         = errors.New("leveldb/storage: storage is read only")
-	errCorruptedCurrent = errors.New("leveldb/storage: corrupted or incomplete CURRENT file")
-	errNonceUnavailable = errors.New("leveldb/aesgcm: unable to generate a nonce")
+	errFileOpen = errors.New(
+		"leveldb/storage: file still open")
+	errReadOnly = errors.New(
+		"leveldb/storage: storage is read only")
+	errCorruptedCurrent = errors.New(
+		"leveldb/storage: corrupted or incomplete CURRENT file")
+	errNonceUnavailable = errors.New(
+		"leveldb/aesgcm: unable to generate a nonce")
 )
 
 type aesgcmStorage struct {
@@ -62,14 +66,14 @@ type aesgcmStorage struct {
 	flock fileLock
 	slock *aesgcmStorageLock
 	buf   []byte
-	// Opened file counter; if open < 0 means closed.
-	open int
+	open  int
 
 	cyp cipher.AEAD
 }
 
 // OpenEncryptedFile ...
-func OpenEncryptedFile(path string, key []byte, readOnly bool) (storage.Storage, error) {
+func OpenEncryptedFile(path string,
+	key []byte, readOnly bool) (storage.Storage, error) {
 	ace, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -82,7 +86,8 @@ func OpenEncryptedFile(path string, key []byte, readOnly bool) (storage.Storage,
 
 	if fi, err := os.Stat(path); err == nil {
 		if !fi.IsDir() {
-			return nil, fmt.Errorf("leveldb/storage: open %s: not a directory", path)
+			return nil, fmt.Errorf(
+				"leveldb/storage: open %s: not a directory", path)
 		}
 	} else if os.IsNotExist(err) && !readOnly {
 		if err := os.MkdirAll(path, 0o755); err != nil {
@@ -134,7 +139,8 @@ func (fs *aesgcmStorage) Open(fd storage.FileDesc) (storage.Reader, error) {
 	if fs.open < 0 {
 		return nil, storage.ErrClosed
 	}
-	of, err := os.OpenFile(filepath.Join(fs.path, fsGenName(fd)), os.O_RDONLY, 0)
+	of, err := os.OpenFile(
+		filepath.Join(fs.path, fsGenName(fd)), os.O_RDONLY, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -147,7 +153,8 @@ func (fs *aesgcmStorage) Open(fd storage.FileDesc) (storage.Reader, error) {
 
 	nonce := make([]byte, fs.cyp.NonceSize())
 	copy(nonce[0:fs.cyp.NonceSize()], crypt[0:fs.cyp.NonceSize()])
-	plain, err := fs.cyp.Open(nil, nonce, crypt[fs.cyp.NonceSize():], fdGenAD(fd)) // TODO: Reuse same byte slice?
+	plain, err := fs.cyp.Open(
+		nil, nonce, crypt[fs.cyp.NonceSize():], fdGenAD(fd))
 	if err != nil {
 		return nil, err
 	}
@@ -155,7 +162,8 @@ func (fs *aesgcmStorage) Open(fd storage.FileDesc) (storage.Reader, error) {
 	return newReader(plain, fd, fs), nil
 }
 
-func (fs *aesgcmStorage) Create(fd storage.FileDesc) (storage.Writer, error) {
+func (fs *aesgcmStorage) Create(fd storage.FileDesc) (storage.Writer,
+	error) {
 	fs.Log(fmt.Sprintf("create %s", fd))
 
 	if !storage.FileDescOk(fd) {
@@ -170,7 +178,9 @@ func (fs *aesgcmStorage) Create(fd storage.FileDesc) (storage.Writer, error) {
 	if fs.open < 0 {
 		return nil, storage.ErrClosed
 	}
-	of, err := os.OpenFile(filepath.Join(fs.path, fsGenName(fd)), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0o644)
+	of, err := os.OpenFile(
+		filepath.Join(fs.path, fsGenName(fd)),
+		os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0o644)
 	if err != nil {
 		return nil, err
 	}
@@ -184,7 +194,6 @@ func (fs *aesgcmStorage) Close() error {
 	if fs.open < 0 {
 		return storage.ErrClosed
 	}
-	// Clear the finalizer.
 	runtime.SetFinalizer(fs, nil)
 
 	if fs.open > 0 {

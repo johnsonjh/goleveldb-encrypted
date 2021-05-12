@@ -1,7 +1,8 @@
-/**
- * GoLevelDB Encrypted Storage
+/*
+ * JLevelDB Encrypted Storage
  *
- *    Copyright 2019 Tenta, LLC
+ *    Copyright (C) 2021 Jeffrey H. Johnson <trnsz@pobox.com>
+ *    Copyright (C) 2019 Tenta, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,20 +13,18 @@
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- * aesgcm_storage_file_test.go: Version of file_storage_test.go for encrypted storage
  *
  * This file contains mostly code originally from GoLevelDB
  * licensed under a BSD license which bears the following copyright
  *
- * "Copyright (c) 2012, Suryandaru Triandana <syndtr@gmail.com>
- * All rights reservefs."
+ * Copyright (c) 2012, Suryandaru Triandana <syndtr@gmail.com>
+ * All rights reserved.
  *
- * "Use of this source code is governed by a BSD-style license that can be
- * found in the LICENSE file."
- *
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file.
  */
 
 package aesgcm
@@ -63,13 +62,23 @@ func (lock *aesgcmStorageLock) Unlock() {
 
 type int64Slice []int64
 
-func (p int64Slice) Len() int           { return len(p) }
-func (p int64Slice) Less(i, j int) bool { return p[i] < p[j] }
-func (p int64Slice) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
+func (p int64Slice) Len() int {
+	return len(p)
+}
+
+func (p int64Slice) Less(i, j int) bool {
+	return p[i] < p[j]
+}
+
+func (p int64Slice) Swap(i, j int) {
+	p[i], p[j] = p[j], p[i]
+}
 
 func (fs *aesgcmStorage) setMeta(fd storage.FileDesc) error {
-	writeFileSynced := func(filename string, data []byte, perm os.FileMode) error {
-		f, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, perm)
+	writeFileSynced := func(
+		filename string, data []byte, perm os.FileMode) error {
+		f, err := os.OpenFile(filename,
+			os.O_WRONLY|os.O_CREATE|os.O_TRUNC, perm)
 		if err != nil {
 			return err
 		}
@@ -87,7 +96,6 @@ func (fs *aesgcmStorage) setMeta(fd storage.FileDesc) error {
 	}
 
 	content := fsGenName(fd) + "\n"
-	// Check and backup old CURRENT file.
 	currentPath := filepath.Join(fs.path, "CURRENT")
 	if _, err := os.Stat(currentPath); err == nil {
 		b, err := ioutil.ReadFile(currentPath)
@@ -96,10 +104,10 @@ func (fs *aesgcmStorage) setMeta(fd storage.FileDesc) error {
 			return err
 		}
 		if string(b) == content {
-			// Content not changed, do nothing.
 			return nil
 		}
-		if err := writeFileSynced(currentPath+".bak", b, 0o644); err != nil {
+		if err := writeFileSynced(
+			currentPath+".bak", b, 0o644); err != nil {
 			fs.Log(fmt.Sprintf("backup CURRENT: %v", err))
 			return err
 		}
@@ -185,12 +193,15 @@ func (fs *aesgcmStorage) GetMeta() (storage.FileDesc, error) {
 			return nil, err
 		}
 		var fd storage.FileDesc
-		if len(b) < 1 || b[len(b)-1] != '\n' || !fsParseNamePtr(string(b[:len(b)-1]), &fd) {
+		if len(b) < 1 ||
+			b[len(b)-1] != '\n' ||
+			!fsParseNamePtr(string(b[:len(b)-1]), &fd) {
 			fs.Log(fmt.Sprintf("%s: corrupted content: %q", name, b))
 			err := &storage.ErrCorrupted{Err: errCorruptedCurrent}
 			return nil, err
 		}
-		if _, err := os.Stat(filepath.Join(fs.path, fsGenName(fd))); err != nil {
+		if _, err := os.Stat(
+			filepath.Join(fs.path, fsGenName(fd))); err != nil {
 			if os.IsNotExist(err) {
 				fs.Log(fmt.Sprintf("%s: missing target file: %s", name, fd))
 				err = os.ErrNotExist
@@ -252,7 +263,8 @@ func (fs *aesgcmStorage) GetMeta() (storage.FileDesc, error) {
 			pendNames[i] = fmt.Sprintf("CURRENT.%d", num)
 		}
 		pendCur, pendErr = tryCurrents(pendNames)
-		if pendErr != nil && pendErr != os.ErrNotExist && !isCorrupted(pendErr) {
+		if pendErr != nil &&
+			pendErr != os.ErrNotExist && !isCorrupted(pendErr) {
 			return storage.FileDesc{}, pendErr
 		}
 	}
@@ -270,13 +282,15 @@ func (fs *aesgcmStorage) GetMeta() (storage.FileDesc, error) {
 
 	if curCur != nil {
 		// Restore CURRENT file to proper state.
-		if !fs.readOnly && (curCur.name != "CURRENT" || len(pendNames) != 0) {
-			// Ignore setMeta errors, however don't delete obsolete files if we
-			// catch error.
+		if !fs.readOnly &&
+			(curCur.name != "CURRENT" || len(pendNames) != 0) {
+			// Ignore setMeta errors, however don't delete
+			// obsolete files if we catch an error.
 			if err := fs.setMeta(curCur.fd); err == nil {
 				// Remove 'pending rename' files.
 				for _, name := range pendNames {
-					if err := os.Remove(filepath.Join(fs.path, name)); err != nil {
+					if err := os.Remove(
+						filepath.Join(fs.path, name)); err != nil {
 						fs.Log(fmt.Sprintf("remove %s: %v", name, err))
 					}
 				}
@@ -292,7 +306,8 @@ func (fs *aesgcmStorage) GetMeta() (storage.FileDesc, error) {
 	return storage.FileDesc{}, curErr
 }
 
-func (fs *aesgcmStorage) List(ft storage.FileType) (fds []storage.FileDesc, err error) {
+func (fs *aesgcmStorage) List(ft storage.FileType) (fds []storage.FileDesc,
+	err error) {
 	fs.mu.Lock()
 	defer fs.mu.Unlock()
 	if fs.open < 0 {
@@ -416,5 +431,7 @@ func (fs *aesgcmStorage) Rename(oldfd, newfd storage.FileDesc) error {
 	if fs.open < 0 {
 		return storage.ErrClosed
 	}
-	return rename(filepath.Join(fs.path, fsGenName(oldfd)), filepath.Join(fs.path, fsGenName(newfd)))
+	return rename(
+		filepath.Join(fs.path, fsGenName(oldfd)),
+		filepath.Join(fs.path, fsGenName(newfd)))
 }

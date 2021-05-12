@@ -1,7 +1,8 @@
-/**
- * GoLevelDB Encrypted Storage
+/*
+ * JLevelDB Encrypted Storage
  *
- *    Copyright 2019 Tenta, LLC
+ *    Copyright (C) 2021 Jeffrey H. Johnson <trnsz@pobox.com>
+ *    Copyright (C) 2019 Tenta, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,10 +13,9 @@
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- * encrypted_basic_test.go: Basic test of the encrypted storage using the wrapper function
  */
 
 package jleveldbencrypted
@@ -23,7 +23,7 @@ package jleveldbencrypted
 import (
 	"bytes"
 	"crypto/hmac"
-	"crypto/sha512"
+	sha "crypto/sha512"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
@@ -34,10 +34,13 @@ import (
 	"github.com/johnsonjh/jleveldb/leveldb/util"
 )
 
-var testKey = []byte{0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf}
+var testKey = []byte{
+	0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7,
+	0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
+}
 
 func tempDir(t *testing.T) string {
-	dir, err := ioutil.TempDir("", "encrypted-leveldb")
+	dir, err := ioutil.TempDir("", "encrypted-jleveldb")
 	if err != nil {
 		t.Fatal(t)
 	}
@@ -57,7 +60,6 @@ func TestOpenAESEncryptedFile(t *testing.T) {
 	d := tempDir(t)
 
 	db, e := OpenAESEncryptedFile(d, testKey, nil)
-	// db, e := leveldb.OpenFile(d, nil)
 	if e != nil {
 		t.Logf("%s", e.Error())
 		t.Fail()
@@ -116,7 +118,7 @@ func TestOpenAESEncryptedFile_Fuzz(t *testing.T) {
 		k := make([]byte, 8)
 		rand.Read(k)
 		s := fmt.Sprintf("%016X", k)
-		h := hmac.New(sha512.New512_256, testKey)
+		h := hmac.New(sha.New512_256, testKey)
 		v := h.Sum([]byte(s))
 
 		db.Put([]byte(s), v, nil)
@@ -148,22 +150,27 @@ func TestOpenAESEncryptedFile_Fuzz(t *testing.T) {
 		}
 	}
 
-	iter := db2.NewIterator(&util.Range{Start: []byte{0x0}, Limit: []byte{'~'}}, nil)
+	iter := db2.NewIterator(
+		&util.Range{Start: []byte{0x0}, Limit: []byte{'~'}}, nil)
 
 	x := 0
 
 	for iter.Next() {
 		k := keys[x]
-		h := hmac.New(sha512.New512_256, testKey)
+		h := hmac.New(sha.New512_256, testKey)
 		v := h.Sum([]byte(k))
 
 		if !bytes.Equal(iter.Key(), []byte(k)) {
-			t.Logf("Out of order key: expected %s, actual %s", k, string(iter.Key()))
+			t.Logf(
+				"Out of order key: expected %s, actual %s",
+				k, string(iter.Key()))
 			t.Fail()
 		}
 
 		if !bytes.Equal(iter.Value(), v) {
-			t.Logf("Invalid data: expected %016X, actual %016X", v, iter.Value())
+			t.Logf(
+				"Invalid data: expected %016X, actual %016X",
+				v, iter.Value())
 			t.Fail()
 		}
 		x++

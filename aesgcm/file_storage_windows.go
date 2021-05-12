@@ -12,8 +12,7 @@ import (
 )
 
 var (
-	modkernel32 = syscall.NewLazyDLL("kernel32.dll")
-
+	modkernel32     = syscall.NewLazyDLL("kernel32.dll")
 	procMoveFileExW = modkernel32.NewProc("MoveFileExW")
 )
 
@@ -41,9 +40,13 @@ func newFileLock(path string, readOnly bool) (fl fileLock, err error) {
 	} else {
 		access = syscall.GENERIC_READ | syscall.GENERIC_WRITE
 	}
-	fd, err := syscall.CreateFile(pathp, access, shareMode, nil, syscall.OPEN_EXISTING, syscall.FILE_ATTRIBUTE_NORMAL, 0)
+	fd, err := syscall.CreateFile(
+		pathp, access, shareMode, nil,
+		syscall.OPEN_EXISTING, syscall.FILE_ATTRIBUTE_NORMAL, 0)
 	if err == syscall.ERROR_FILE_NOT_FOUND {
-		fd, err = syscall.CreateFile(pathp, access, shareMode, nil, syscall.OPEN_ALWAYS, syscall.FILE_ATTRIBUTE_NORMAL, 0)
+		fd, err = syscall.CreateFile(
+			pathp, access, shareMode, nil,
+			syscall.OPEN_ALWAYS, syscall.FILE_ATTRIBUTE_NORMAL, 0)
 	}
 	if err != nil {
 		return
@@ -53,7 +56,10 @@ func newFileLock(path string, readOnly bool) (fl fileLock, err error) {
 }
 
 func moveFileEx(from, to *uint16, flags uint32) error {
-	r1, _, e1 := syscall.Syscall(procMoveFileExW.Addr(), 3, uintptr(unsafe.Pointer(from)), uintptr(unsafe.Pointer(to)), uintptr(flags))
+	r1, _, e1 := syscall.Syscall(procMoveFileExW.Addr(), 3,
+		uintptr(unsafe.Pointer(from)),
+		uintptr(unsafe.Pointer(to)),
+		uintptr(flags))
 	if r1 == 0 {
 		if e1 != 0 {
 			return error(e1)
@@ -75,4 +81,6 @@ func rename(oldpath, newpath string) error {
 	return moveFileEx(from, to, _MOVEFILE_REPLACE_EXISTING)
 }
 
-func syncDir(name string) error { return nil }
+func syncDir(name string) error {
+	return nil
+}
