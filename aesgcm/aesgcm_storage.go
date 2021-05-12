@@ -113,9 +113,7 @@ func OpenEncryptedFile(path string, key []byte, readOnly bool) (storage.Storage,
 	return fs, nil
 }
 
-func (fs *aesgcmStorage) Log(str string) {
-	// println(str)
-	// TODO: Pluggable logging
+func (fs *aesgcmStorage) Log(_ string) {
 }
 
 func fdGenAD(fd storage.FileDesc) []byte {

@@ -42,6 +42,7 @@ func (e *EncryptedDB) Close() {
 	e.scloser.Close()
 }
 
+// OpenAESEncryptedFile ...
 func OpenAESEncryptedFile(path string, key []byte, opt *opt.Options) (db *EncryptedDB, err error) {
 	stor, err := aesgcm.OpenEncryptedFile(path, key, opt.GetReadOnly())
 	if err != nil {
