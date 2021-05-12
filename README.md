@@ -62,5 +62,3 @@ license of [GoLevelDB Project](https://github.com/syndtr/goleveldb/blob/master/L
 ## Original Authors
 
 Derived from [GoLevelDB Encrypted Storage](https://github.com/tenta-browser/goleveldb-encrypted) by [Tenta](https://tenta.com).
-
-
