@@ -3,8 +3,8 @@ module github.com/johnsonjh/jleveldb-encrypted
 go 1.17
 
 require (
-	github.com/johnsonjh/jleveldb v0.0.0-20210714033633-fbbb5dfc56a9
-	github.com/johnsonjh/leaktestfe v0.0.0-20210714000312-fb9839513ad6
+	github.com/johnsonjh/jleveldb v0.0.0-20210725071015-938a27ba2915
+	github.com/johnsonjh/leaktestfe v0.0.0-20210725032240-eaa86b37fd00
 )
 
 require (
